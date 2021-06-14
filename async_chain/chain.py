@@ -32,20 +32,23 @@ class Chain(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
 
+StartingType = t.TypeVar("StartingType")
+
+
 class ChainStart(Chain):
     __slots__ = ("__start__",)
 
-    def __init__(self, start: t.Any):
+    def __init__(self, start: StartingType):
         super().__init__()
-        self.__start__: t.Any = start
+        self.__start__: StartingType = start
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Chain {self.__display__()}>"
 
-    def __display__(self):
+    def __display__(self) -> str:
         return f"{self.__start__!r}"
 
-    async def __evaluate__(self):
+    async def __evaluate__(self) -> StartingType:
         return self.__start__
 
 
@@ -56,7 +59,7 @@ class ChainNode(Chain, metaclass=abc.ABCMeta):
         super().__init__()
         self.__previous__: Chain = previous
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Chain {self.__display__()}>"
 
 
@@ -67,10 +70,10 @@ class ChainGetAttr(ChainNode):
         super().__init__(previous=previous)
         self.__item__: str = item
 
-    def __display__(self):
+    def __display__(self) -> str:
         return f"{self.__previous__.__display__()}.{self.__item__!s}"
 
-    async def __evaluate__(self):
+    async def __evaluate__(self) -> t.Any:
         previous = await self.__previous__.__evaluate__()
 
         current = getattr(previous, self.__item__)
@@ -88,10 +91,10 @@ class ChainGetItem(ChainNode):
         super().__init__(previous=previous)
         self.__item__: t.Any = item
 
-    def __display__(self):
+    def __display__(self) -> str:
         return f"{self.__previous__.__display__()}[{self.__item__!r}]"
 
-    async def __evaluate__(self):
+    async def __evaluate__(self) -> t.Any:
         previous = await self.__previous__.__evaluate__()
 
         current = previous[self.__item__]
@@ -105,18 +108,18 @@ class ChainGetItem(ChainNode):
 class ChainCall(ChainNode):
     __slots__ = ("__args__", "__kwargs__",)
 
-    def __init__(self, previous: Chain, args, kwargs):
+    def __init__(self, previous: Chain, args: t.Collection[t.Any], kwargs: t.Mapping[str, t.Any]):
         super().__init__(previous=previous)
-        self.__args__ = args
-        self.__kwargs__ = kwargs
+        self.__args__: t.Collection[t.Any] = args
+        self.__kwargs__: t.Mapping[str, t.Any] = kwargs
 
-    def __display__(self):
+    def __display__(self) -> str:
         args = map(lambda a: f"{a!r}", self.__args__)
         kwargs = map(lambda k, v: f"{k!s}={v!r}", self.__kwargs__)
-        allargs = ", ".join([*args, *kwargs])
+        allargs: str = ", ".join([*args, *kwargs])
         return f"{self.__previous__.__display__()}({allargs})"
 
-    async def __evaluate__(self):
+    async def __evaluate__(self) -> t.Any:
         previous = await self.__previous__.__evaluate__()
 
         current = previous(*self.__args__, **self.__kwargs__)

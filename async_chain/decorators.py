@@ -1,4 +1,5 @@
 import functools
+import typing as t
 from .chain import ChainStart
 
 
@@ -6,10 +7,10 @@ class FunctionWrapper:
     def __init__(self, func):
         self._func = func
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self._func.__name__
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> t.Any:
         return self._func(*args, **kwargs)
 
 
