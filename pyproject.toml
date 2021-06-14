@@ -1,9 +1,21 @@
 [tool.poetry]
 name = "async-chain"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "A coroutine builder"
 authors = ["Stefano Pigozzi <me@steffo.eu>"]
 license = "LGPL-3.0-or-later"
+readme = "README.md"
+repository = "https://github.com/Steffo99/async-chain"
+documentation = "https://github.com/Steffo99/async-chain/blob/main/README.md"
+keywords = ["asyncio"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Framework :: AsyncIO",
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
