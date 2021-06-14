@@ -23,6 +23,11 @@ class ExampleClass:
         await asyncio.sleep(0)
         return self.__class__(self.value + 1)
 
+    @async_chain.method
+    async def triple_list(self):
+        await asyncio.sleep(0)
+        return [self.value, self.value + 1, self.value + 2]
+
 
 async def test_class_creation():
     example = ExampleClass(0)
@@ -36,9 +41,8 @@ def example():
 
 async def test_method_existence(example):
     assert hasattr(example, "plus")
-    assert hasattr(example, "minus")
     assert hasattr(example, "incremented")
-    assert hasattr(example, "decremented")
+    assert hasattr(example, "triple_list")
 
 
 async def test_chain_single_property(example):
@@ -63,3 +67,9 @@ async def test_chain_multiple_methods(example):
     three = await example.plus(1).plus(1).plus(1)
     assert isinstance(three, ExampleClass)
     assert three.value == 3
+
+
+async def test_chain_getitem(example):
+    two = await example.triple_list()[2]
+    assert isinstance(two, int)
+    assert two == 2
