@@ -1,9 +1,20 @@
+<div align="center">
+
+![](.media/icon-128x128_round.png)
+
 # `async-chain`
 
 A coroutine builder
 
+</div>
 
-## What?
+## Links
+
+[![PyPI](https://img.shields.io/pypi/v/async-chain)](https://pypi.org/project/async-chain)
+
+## About
+
+### The problem
 
 Have you ever felt that the `await` syntax in Python was a bit clunky when chaining multiple methods together?
 
@@ -28,8 +39,7 @@ async def on_message(event):
     await event.get_message().get_author().send_message("Hello world!")
 ```
 
-
-## How?
+### The solution
 
 First, install `async_chain` with your favorite package manager:
 
